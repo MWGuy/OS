@@ -4,7 +4,7 @@ LDPARAMS = -melf_i386
 
 objects = obj/loader.o \
           obj/libc.o \
-		  obj/terminal.o \
+		  obj/tty.o \
 		  obj/vga.o \
 		  obj/kernel.o
 
