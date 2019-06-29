@@ -4,11 +4,12 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdarg.h>
 
 #define isdigit(c) ((c)>='0' && (c)<='9') ? 1 : 0
 
 size_t strlen(const char * str);
-char * itoa(int value, char * str, int base );
+void itoa(char *buf, int base, int d);
 int atoi(const char * string);
 char * strrev(char * s);
 char * strcpy(char * s, const char * t);
@@ -22,5 +23,6 @@ char * strpbrk(const char * s, const char * accept);
 size_t strspn(const char * s, const char * accept);
 char * strtok(char * s, const char * delim);
 
+void printf(const char * __format, ...);
 
 #endif // LIBC_H

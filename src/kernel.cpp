@@ -3,9 +3,10 @@
 
 extern "C" void kmain(multiboot_info_t * multiboot_structure, unsigned int multiboot_magic) {
     TTY::initialize();
-    TTY::write_string("Hello, new user!\nI`m new OS!\n");
-    TTY::set_color(VGA_COLOR_LIGHT_BLUE);
-    TTY::write_string("Hello, kernel World!\n");
+
+    printf("Kernel loaded successfully\n");
+    printf("Test %i\n", 123);
+
     while(1);
 }
 

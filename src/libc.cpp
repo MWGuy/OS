@@ -1,4 +1,5 @@
 #include <libc.h>
+#include <tty.h>
 
 size_t strlen(const char* str) {
 	size_t len = 0;
@@ -7,35 +8,36 @@ size_t strlen(const char* str) {
 	return len;
 }
 
-char * itoa(int value, char * str, int base) {
-    char * rc, * ptr, * low;
+void itoa(char *buf, int base, int d) {
+    char *p = buf;
+    char *p1, *p2;
+    unsigned long ud = d;
+    int divisor = 10;
 
-    if (base < 2 || base > 36) {
-        * str = '\0';
-        return str;
+    if (base == 'd' && d < 0) {
+        *p++ = '-';
+        buf++;
+        ud = -d;
     }
-
-    rc = ptr = str;
-
-    if (value < 0 && base == 10)
-        * ptr++ = '-';
-
-    low = ptr;
+    else if (base == 'x')
+        divisor = 16;
 
     do {
-        * ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
-        value /= base;
-    } while (value);
+        int remainder = ud % divisor;
+        *p++ = (remainder < 10) ? remainder + '0' : remainder + 'a' - 10;
+    } while (ud /= divisor);
 
-    * ptr-- = '\0';
+    *p = 0;
 
-    while (low < ptr) {
-        char tmp = * low;
-        * low++ = * ptr;
-        * ptr-- = tmp;
+    p1 = buf;
+    p2 = p - 1;
+    while (p1 < p2) {
+        char tmp = *p1;
+        *p1 = *p2;
+        *p2 = tmp;
+        p1++;
+        p2--;
     }
-
-    return rc;
 }
 
 int atoi(const char * string) {
@@ -180,4 +182,57 @@ char * strtok(char * s, const char * delim)
     }
 
     return token;
+}
+
+void printf(const char *format, ...) {
+    char ** arg = (char **) &format;
+    int c;
+    char buf[20];
+
+    arg++;
+
+    while ((c = *format++) != 0) {
+        if (c != '%')
+            TTY::put_char(c);
+        else {
+            char *p, *p2;
+            int pad0 = 0, pad = 0;
+
+            c = *format++;
+            if (c == '0') {
+                pad0 = 1;
+                c = *format++;
+            }
+
+            if (c >= '0' && c <= '9') {
+                pad = c - '0';
+                c = *format++;
+            }
+
+            switch (c) {
+                case 'd':
+                case 'u':
+                case 'x':
+                case 'i':
+                    itoa (buf, c, *((int *) arg++));
+                    p = buf;
+                    goto string;
+                case 's':
+                    p = *arg++;
+                    if (! p)
+                        p = "(null)";
+                string:
+                    for (p2 = p; *p2; p2++);
+                    for (; p2 < p + pad; p2++)
+                        TTY::put_char(pad0 ? '0' : ' ');
+                    while (*p)
+                        TTY::put_char(*p++);
+                    break;
+
+                default:
+                    TTY::put_char(*((int *) arg++));
+                    break;
+            }
+        }
+    }
 }

@@ -23,6 +23,14 @@ void TTY::set_color(uint8_t color) {
 }
  
 void TTY::put_entry_at(char c, uint8_t color, size_t x, size_t y) {
+    if (c == '\n' || c == '\r') {
+        for (int i = x; i < VGA_WIDTH - 1;  ++i) {
+            TTY::put_char(' ');
+        }
+
+        return;
+    }
+
 	const size_t index = y * VGA_WIDTH + x;
     terminal_buffer[index] = VGA::entry(c, color);
 }
@@ -39,16 +47,8 @@ void TTY::put_char(char c) {
 void TTY::write(const char* data, size_t size) {
 	size_t g = 0;
 	
-	for (size_t i = 0; i < size; i++) {
-		if (data[i] == '\n') {
-			for (int j = 0; j < VGA_WIDTH - g; ++j)
-                TTY::put_char(' ');
-			g = 0;
-		} else {
-			g++;
-            TTY::put_char(data[i]);
-		}
-	}
+	for (size_t i = 0; i < size; i++)
+	    TTY::put_char(data[i]);
 }
  
 void TTY::write_string(const char * data) {
