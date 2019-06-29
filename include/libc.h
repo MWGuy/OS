@@ -2,9 +2,17 @@
 #define LIBC_H
 
 #include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
 #include <stdarg.h>
+
+typedef char                     int8_t;
+typedef unsigned char           uint8_t;
+typedef short                   int16_t;
+typedef unsigned short         uint16_t;
+typedef int                     int32_t;
+typedef unsigned int           uint32_t;
+typedef long long int           int64_t;
+typedef unsigned long long int uint64_t;
+typedef uint32_t                 size_t;
 
 #define isdigit(c) ((c)>='0' && (c)<='9') ? 1 : 0
 
@@ -24,5 +32,7 @@ size_t strspn(const char * s, const char * accept);
 char * strtok(char * s, const char * delim);
 
 void printf(const char * __format, ...);
+void * malloc(size_t size);
+void free(void * ptr);
 
 #endif // LIBC_H

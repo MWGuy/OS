@@ -1,4 +1,4 @@
-GCCPARAMS = -m32 -Iinclude -fno-stack-protector -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
+GCCPARAMS = -m32 -Iinclude -fcheck-new -fno-stack-protector -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
@@ -6,6 +6,7 @@ objects = obj/loader.o \
           obj/libc.o \
 		  obj/tty.o \
 		  obj/vga.o \
+		  obj/memory.o \
 		  obj/kernel.o
 
 obj/%.o: src/%.cpp

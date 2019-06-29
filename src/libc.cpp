@@ -1,5 +1,6 @@
 #include <libc.h>
 #include <tty.h>
+#include <memory.h>
 
 size_t strlen(const char* str) {
 	size_t len = 0;
@@ -235,4 +236,15 @@ void printf(const char *format, ...) {
             }
         }
     }
+}
+
+void * malloc(size_t size) {
+    if(MemoryManager::activeMemoryManager == nullptr)
+        return nullptr;
+    return MemoryManager::activeMemoryManager->malloc(size);
+}
+
+void free(void * ptr) {
+    if(MemoryManager::activeMemoryManager != nullptr)
+        MemoryManager::activeMemoryManager->free(ptr);
 }

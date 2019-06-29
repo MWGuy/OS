@@ -5,7 +5,6 @@ extern "C" void kmain(multiboot_info_t * multiboot_structure, unsigned int multi
     TTY::initialize();
 
     printf("Kernel loaded successfully\n");
-    printf("Test %i\n", 123);
 
     while(1);
 }
